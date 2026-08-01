@@ -8,6 +8,10 @@ certificate monitoring.
 The environment remains local: it does not require a public domain or expose
 services to the internet.
 
+## Lab guides
+
+- [Initial setup and manual PKI walkthrough](docs/initial-setup.md)
+
 ## Prerequisites
 
 - Windows 10 or later
