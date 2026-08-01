@@ -1,0 +1,19 @@
+name: internal-pki-lab
+
+# Services are introduced in later phases. Keeping the shared network and
+# persistent storage here makes the architecture explicit from the start.
+services: {}
+
+networks:
+  pki-network:
+    name: internal-pki-lab
+    driver: bridge
+
+volumes:
+  step-ca-data:
+    name: internal-pki-lab-step-ca-data
+  app1-certificates:
+    name: internal-pki-lab-app1-certificates
+  app2-certificates:
+    name: internal-pki-lab-app2-certificates
+

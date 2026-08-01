@@ -1,0 +1,20 @@
+1. Create repository
+2. Create Compose network and directories
+3. Initialize step-ca
+4. Inspect root and intermediate
+5. Start and validate CA
+6. Issue one certificate manually
+7. Configure Nginx manually
+8. Reproduce TLS validation failures
+9. Enable ACME
+10. Configure first ACME client
+11. Automate first Nginx certificate
+12. Add second Nginx service
+13. Configure renewal and reload
+14. Run failure scenarios
+15. Run compromised-key scenario
+16. Test short-lived expiration
+17. Discuss and model intermediate rotation
+18. Build monitoring script
+19. Create runbook
+20. Perform final demonstration

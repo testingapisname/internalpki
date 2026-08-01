@@ -1,0 +1,26 @@
+# Generated CA state contains private keys and passwords.
+step-ca/data/
+step-ca/secrets/
+
+# Issued server identities and ACME account keys.
+nginx/*/certs/
+client/accounts/
+client/certificates/
+
+# Local environment overrides and credentials.
+.env
+*.password
+*.key
+*.pem
+*.pfx
+*.p12
+
+# Monitoring output and exercise evidence.
+monitoring/output/
+evidence/
+
+# Common local/editor artifacts.
+.DS_Store
+Thumbs.db
+.vscode/
+
