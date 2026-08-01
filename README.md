@@ -11,6 +11,7 @@ services to the internet.
 ## Lab guides
 
 - [Initial setup and manual PKI walkthrough](docs/initial-setup.md)
+- [ACME HTTP-01 challenge setup](docs/acme-http01-setup.md)
 
 ## Prerequisites
 
@@ -80,7 +81,7 @@ in detail.
 - [x] Phase 3: start `step-ca` and validate explicit root trust
 - [x] Phase 4: manually generate App1's key, CSR, and leaf certificate
 - [x] Phase 5: serve App1 over HTTPS and reproduce common TLS failures
-- [ ] Phase 6: record the certificate inventory
+- [x] Phase 6: record the certificate inventory
 - [ ] Phase 7: enable and inspect the ACME provisioner
 - [ ] Phase 8: obtain App1's certificate through ACME
 - [ ] Phase 9: add an independently managed App2 service
@@ -91,5 +92,5 @@ in detail.
 - [ ] Phase 18: final demonstration
 
 Detailed commands, explanations, observed results, and troubleshooting notes
-through Phase 5 are recorded in the
+through Phase 6 are recorded in the
 [initial setup and manual PKI walkthrough](docs/initial-setup.md).

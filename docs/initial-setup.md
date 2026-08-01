@@ -553,9 +553,36 @@ docker compose --profile exercises run --rm nginx-app-1-key-mismatch
 | App1 certificate chain | No | Presents App1's certified identity and issuer chain |
 | CA/provisioner password | Yes | Decrypts protected signing or authorization keys |
 
-## 14. Next step
+## 14. Certificate inventory
 
-The next phase creates a certificate inventory recording service ownership,
-DNS names, issuer, serial, validity, algorithm, paths, renewal method, and
-fingerprint. After that, the lab introduces an ACME provisioner and replaces
-manual enrollment with automated issuance and renewal.
+The first operational inventory record is stored in
+`inventory/certificates.csv`. It records App1's DNS identity, issuer, serial,
+validity window, key algorithm, artifact paths, renewal method, owner, status,
+and complete certificate fingerprint.
+
+The leaf certificate fingerprint is:
+
+```text
+0f065eb87810a3487d12857085acf12abfa17679b5dc0a9ccca76e66c410bee6
+```
+
+This identifies the complete issued certificate and will change when the
+certificate is renewed, even if the same private key is reused. Inventory data
+must therefore be updated as part of renewal, replacement, and revocation
+workflows rather than treated as one-time documentation.
+
+The renewal threshold was checked with:
+
+```powershell
+step certificate needs-renewal app1.crt --expires-in 6h
+```
+
+For this predicate-style command, exit code zero means renewal is needed and
+exit code one means the certificate has more than the requested duration
+remaining. App1 returned exit code one at this checkpoint.
+
+## 15. Next step
+
+The next phase introduces an ACME provisioner and inspects its directory. ACME
+will then replace manual enrollment with automated authorization, issuance,
+and renewal.

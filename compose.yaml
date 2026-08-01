@@ -33,10 +33,25 @@ services:
     volumes:
       - ./nginx/app1/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/app1/certs:/etc/nginx/tls:ro
+      - app1-acme-webroot:/var/www/acme:ro
     networks:
       pki-network:
         aliases:
           - app1.lab.local
+
+  step-cli:
+    image: smallstep/step-ca:0.30.2
+    profiles:
+      - tools
+    entrypoint:
+      - step
+    volumes:
+      - step-client-data:/home/step
+      - ./step-ca/root_ca.crt:/roots/root_ca.crt:ro
+      - ./nginx/app1/certs:/work
+      - app1-acme-webroot:/var/www/acme
+    networks:
+      - pki-network
 
   nginx-app-1-incomplete-chain:
     image: nginx:1.28-alpine
@@ -79,6 +94,10 @@ volumes:
     name: internal-pki-lab-app1-certificates
   app2-certificates:
     name: internal-pki-lab-app2-certificates
+  step-client-data:
+    name: internal-pki-lab-step-client-data
+  app1-acme-webroot:
+    name: internal-pki-lab-app1-acme-webroot
 
 secrets:
   ca_password:
