@@ -76,6 +76,20 @@ in detail.
 ## Progress
 
 - [x] Phase 1: repository, storage declarations, network, and secret safeguards
-- [ ] Phase 2: root and intermediate CA hierarchy
-- [ ] Phase 3: start and validate `step-ca`
-- [ ] Phase 4+: issuance, HTTPS, ACME, exercises, and monitoring
+- [x] Phase 2: root and intermediate CA hierarchy
+- [x] Phase 3: start `step-ca` and validate explicit root trust
+- [x] Phase 4: manually generate App1's key, CSR, and leaf certificate
+- [x] Phase 5: serve App1 over HTTPS and reproduce common TLS failures
+- [ ] Phase 6: record the certificate inventory
+- [ ] Phase 7: enable and inspect the ACME provisioner
+- [ ] Phase 8: obtain App1's certificate through ACME
+- [ ] Phase 9: add an independently managed App2 service
+- [ ] Phase 10: automate renewal and Nginx reload
+- [ ] Phases 11-14: incident and failure exercises
+- [ ] Phases 15-16: certificate monitoring and structured output
+- [ ] Phase 17: operational runbook
+- [ ] Phase 18: final demonstration
+
+Detailed commands, explanations, observed results, and troubleshooting notes
+through Phase 5 are recorded in the
+[initial setup and manual PKI walkthrough](docs/initial-setup.md).
