@@ -1,0 +1,31 @@
+[controller]
+interval_seconds = 900
+health_host = "0.0.0.0"
+health_port = 8080
+
+[[certificate]]
+id = "app1"
+hostname = "app1.lab.local"
+csr = "/certs/app1/app1.csr"
+certificate = "/certs/app1/app1-acme.crt"
+account_state = "/state/app1"
+webroot = "/webroots/app1"
+ca_url = "https://ca.lab.local:9000"
+root = "/trust/root_ca.crt"
+provisioner = "lab-acme"
+renew_before = "4h"
+verify_url = "https://app1.lab.local"
+
+[[certificate]]
+id = "app2"
+hostname = "app2.lab.local"
+csr = "/certs/app2/app2.csr"
+certificate = "/certs/app2/app2-acme.crt"
+account_state = "/state/app2"
+webroot = "/webroots/app2"
+ca_url = "https://ca.lab.local:9000"
+root = "/trust/root_ca.crt"
+provisioner = "lab-acme"
+renew_before = "4h"
+verify_url = "https://app2.lab.local"
+

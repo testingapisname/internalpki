@@ -12,6 +12,7 @@ services to the internet.
 
 - [Initial setup and manual PKI walkthrough](docs/initial-setup.md)
 - [ACME HTTP-01 challenge setup](docs/acme-http01-setup.md)
+- [Certificate controller architecture and operation](controller/README.md)
 
 ## Prerequisites
 
@@ -85,7 +86,7 @@ in detail.
 - [x] Phase 7: enable and inspect the ACME provisioner
 - [x] Phase 8: obtain and deploy App1's certificate through ACME
 - [x] Phase 9: add an independently managed App2 service
-- [ ] Phase 10: automate renewal and Nginx reload
+- [x] Phase 10: automate renewal and Nginx reload with the controller
 - [ ] Phases 11-14: incident and failure exercises
 - [ ] Phases 15-16: certificate monitoring and structured output
 - [ ] Phase 17: operational runbook

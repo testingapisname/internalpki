@@ -27,6 +27,8 @@ services:
     image: nginx:1.28-alpine
     container_name: internal-pki-nginx-app-1
     restart: unless-stopped
+    environment:
+      TLS_CERTIFICATE_PATH: /etc/nginx/tls/app1-acme.crt
     ports:
       - "127.0.0.1:8081:80"
       - "127.0.0.1:8443:443"
@@ -34,6 +36,7 @@ services:
       - ./nginx/app1/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/app1/certs:/etc/nginx/tls:ro
       - app1-acme-webroot:/var/www/acme:ro
+      - ./scripts/nginx-certificate-watcher.sh:/docker-entrypoint.d/40-certificate-watcher.sh:ro
     networks:
       pki-network:
         aliases:
@@ -57,6 +60,8 @@ services:
     image: nginx:1.28-alpine
     container_name: internal-pki-nginx-app-2
     restart: unless-stopped
+    environment:
+      TLS_CERTIFICATE_PATH: /etc/nginx/tls/app2-acme.crt
     ports:
       - "127.0.0.1:8082:80"
       - "127.0.0.1:8445:443"
@@ -64,6 +69,7 @@ services:
       - ./nginx/app2/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/app2/certs:/etc/nginx/tls:ro
       - app2-acme-webroot:/var/www/acme:ro
+      - ./scripts/nginx-certificate-watcher.sh:/docker-entrypoint.d/40-certificate-watcher.sh:ro
     networks:
       pki-network:
         aliases:
@@ -80,6 +86,33 @@ services:
       - ./step-ca/root_ca.crt:/roots/root_ca.crt:ro
       - ./nginx/app2/certs:/work
       - app2-acme-webroot:/var/www/acme
+    networks:
+      - pki-network
+
+  certificate-controller:
+    build:
+      context: ./controller
+    image: internal-pki-controller:0.1.0
+    container_name: internal-pki-certificate-controller
+    restart: unless-stopped
+    depends_on:
+      step-ca:
+        condition: service_healthy
+      nginx-app-1:
+        condition: service_started
+      nginx-app-2:
+        condition: service_started
+    ports:
+      - "127.0.0.1:8090:8080"
+    volumes:
+      - ./controller/controller.toml:/config/controller.toml:ro
+      - ./step-ca/root_ca.crt:/trust/root_ca.crt:ro
+      - ./nginx/app1/certs:/certs/app1
+      - ./nginx/app2/certs:/certs/app2
+      - step-client-data:/state/app1
+      - step-client-app2-data:/state/app2
+      - app1-acme-webroot:/webroots/app1
+      - app2-acme-webroot:/webroots/app2
     networks:
       - pki-network
 

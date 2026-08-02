@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "internal-pki-controller"
+version = "0.1.0"
+description = "Certificate lifecycle controller for the Internal PKI lab"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+pki-controller = "pki_controller.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

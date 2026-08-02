@@ -24,3 +24,7 @@ evidence/
 Thumbs.db
 .vscode/
 
+# Python cache and local virtual environments.
+__pycache__/
+*.py[cod]
+.venv/
