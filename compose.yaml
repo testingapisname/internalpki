@@ -127,9 +127,66 @@ services:
       # Online CA material is read-only during normal ceremony operations.
       - step-ca-data:/online:ro
       - offline-root-data:/offline
+      - code-signing-ca-data:/codesign
+      - ./code-signing/templates:/codesign/templates:ro
       - ./step-ca/offline-root-backup:/backup
     secrets:
       - ca_password
+      - code_signing_ca_password
+
+  code-signing-ca:
+    image: smallstep/step-ca:0.30.2
+    container_name: internal-pki-code-signing-ca
+    hostname: codesign-ca.lab.local
+    restart: unless-stopped
+    environment:
+      STEPPATH: /codesign
+    command:
+      - step-ca
+      - /codesign/config/ca.json
+      - --password-file
+      - /run/secrets/code_signing_ca_password
+    ports:
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - code-signing-ca-data:/codesign
+      - ./code-signing/templates:/codesign/templates:ro
+    secrets:
+      - code_signing_ca_password
+    networks:
+      pki-network:
+        aliases:
+          - codesign-ca.lab.local
+
+  code-signing-cli:
+    image: smallstep/step-ca:0.30.2
+    profiles:
+      - tools
+    entrypoint:
+      - step
+    volumes:
+      - ./step-ca/root_ca.crt:/roots/root_ca.crt:ro
+      - ./code-signing/publisher:/work
+    secrets:
+      - code_signing_ca_password
+      - publisher_key_password
+    networks:
+      - pki-network
+
+  artifact-signer:
+    build:
+      context: ./code-signing/tooling
+    image: internal-pki-artifact-signer:0.1.0
+    profiles:
+      - tools
+    working_dir: /workspace
+    volumes:
+      - ./code-signing/sample:/source:ro
+      - ./code-signing/publisher:/publisher:ro
+      - ./code-signing/artifacts:/artifacts
+      - ./step-ca/root_ca.crt:/trust/root_ca.crt:ro
+    secrets:
+      - publisher_key_password
 
   nginx-app-1-incomplete-chain:
     image: nginx:1.28-alpine
@@ -182,8 +239,14 @@ volumes:
     name: internal-pki-lab-app2-acme-webroot
   offline-root-data:
     name: internal-pki-lab-offline-root-data
+  code-signing-ca-data:
+    name: internal-pki-lab-code-signing-ca-data
 
 secrets:
   ca_password:
     # Created interactively before CA initialization; ignored by Git.
     file: ./step-ca/secrets/ca-password.txt
+  code_signing_ca_password:
+    file: ./step-ca/secrets/code-signing-ca-password.txt
+  publisher_key_password:
+    file: ./step-ca/secrets/publisher-key-password.txt

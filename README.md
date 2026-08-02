@@ -15,6 +15,7 @@ services to the internet.
 - [Certificate controller architecture and operation](controller/README.md)
 - [Offline root extraction ceremony](docs/offline-root-ceremony.md)
 - [Operational runbook](docs/operational-runbook.md)
+- [Code signing lab](docs/code-signing-lab.md)
 
 ## Prerequisites
 

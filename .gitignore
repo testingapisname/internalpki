@@ -2,6 +2,10 @@
 step-ca/data/
 step-ca/secrets/
 step-ca/offline-root-backup/
+code-signing/publisher/*
+!code-signing/publisher/.gitkeep
+code-signing/artifacts/*
+!code-signing/artifacts/.gitkeep
 
 # Issued server identities and ACME account keys.
 nginx/*/certs/
