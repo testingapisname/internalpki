@@ -32,9 +32,13 @@ def renew_target(target: CertificateTarget, force: bool = False) -> str:
 
     old_fingerprint = fingerprint(target, active)
     emit("renewal_started", target=target.target_id, old_fingerprint=old_fingerprint)
-    issue(target, candidate)
-    verify(target, candidate)
-    new_fingerprint = fingerprint(target, candidate)
+    try:
+        issue(target, candidate)
+        verify(target, candidate)
+        new_fingerprint = fingerprint(target, candidate)
+    except Exception:
+        candidate.unlink(missing_ok=True)
+        raise
     if new_fingerprint == old_fingerprint:
         candidate.unlink(missing_ok=True)
         raise RuntimeError("CA returned the existing certificate")
@@ -65,4 +69,3 @@ def renew_target(target: CertificateTarget, force: bool = False) -> str:
     _restore(active, backup)
     emit("renewal_rolled_back", target=target.target_id, reason="live verification timeout")
     raise RuntimeError("live endpoint did not deploy the new certificate within 45 seconds")
-

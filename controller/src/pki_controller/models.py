@@ -17,6 +17,7 @@ class CertificateTarget:
     provisioner: str
     renew_before: str
     verify_url: str
+    operation_timeout_seconds: int
 
 
 @dataclass(frozen=True)
@@ -25,4 +26,3 @@ class ControllerConfig:
     health_host: str
     health_port: int
     targets: tuple[CertificateTarget, ...]
-

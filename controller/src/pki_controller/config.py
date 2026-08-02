@@ -24,6 +24,7 @@ def load_config(path: Path) -> ControllerConfig:
             provisioner=item.get("provisioner", "lab-acme"),
             renew_before=item.get("renew_before", "4h"),
             verify_url=item["verify_url"],
+            operation_timeout_seconds=int(item.get("operation_timeout_seconds", 120)),
         )
         for item in raw.get("certificate", [])
     )
@@ -39,4 +40,3 @@ def load_config(path: Path) -> ControllerConfig:
         health_port=int(controller.get("health_port", 8080)),
         targets=targets,
     )
-

@@ -14,14 +14,20 @@ class StepError(RuntimeError):
 def run_step(target: CertificateTarget, *arguments: str) -> subprocess.CompletedProcess[str]:
     environment = os.environ.copy()
     environment["STEPPATH"] = str(target.account_state)
-    result = subprocess.run(
-        ["step", *arguments],
-        text=True,
-        capture_output=True,
-        check=False,
-        env=environment,
-    )
-    return result
+    environment["NO_COLOR"] = "1"
+    try:
+        return subprocess.run(
+            ["step", *arguments],
+            text=True,
+            capture_output=True,
+            check=False,
+            env=environment,
+            timeout=target.operation_timeout_seconds,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise StepError(
+            f"step operation timed out after {target.operation_timeout_seconds} seconds"
+        ) from error
 
 
 def require_success(result: subprocess.CompletedProcess[str], operation: str) -> str:
@@ -86,4 +92,3 @@ def verify(target: CertificateTarget, certificate: Path) -> None:
         ),
         "certificate verification",
     )
-

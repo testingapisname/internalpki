@@ -1,0 +1,7 @@
+services:
+  nginx-app-1:
+    volumes:
+      - ./exercises/nginx-app1-challenge-broken.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/app1/certs:/etc/nginx/tls:ro
+      - app1-acme-webroot:/var/www/acme:ro
+      - ./scripts/nginx-certificate-watcher.sh:/docker-entrypoint.d/40-certificate-watcher.sh:ro
