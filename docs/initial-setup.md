@@ -158,9 +158,10 @@ if the online intermediate is compromised: the protected root can create a
 replacement intermediate without distributing a new trust anchor to every
 client.
 
-This lab initially stores both encrypted keys in one volume for accessibility.
-A production design should separate the root key and use controlled signing
-ceremonies, potentially backed by an HSM.
+The lab initially stored both encrypted keys in one volume for accessibility.
+The root private key has since been moved to a dedicated offline-root volume
+and an ignored encrypted backup. The online CA retains only the intermediate
+private key and public chain. See `docs/offline-root-ceremony.md`.
 
 An HSM keeps a private key non-exportable and performs signing internally. It
 does not eliminate the need for authorization, policy, audit logging, backup,

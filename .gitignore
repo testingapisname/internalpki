@@ -1,6 +1,7 @@
 # Generated CA state contains private keys and passwords.
 step-ca/data/
 step-ca/secrets/
+step-ca/offline-root-backup/
 
 # Issued server identities and ACME account keys.
 nginx/*/certs/

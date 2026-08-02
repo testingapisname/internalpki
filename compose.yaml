@@ -116,6 +116,21 @@ services:
     networks:
       - pki-network
 
+  offline-root-ceremony:
+    image: smallstep/step-ca:0.30.2
+    profiles:
+      - ceremony
+    entrypoint:
+      - step
+    network_mode: none
+    volumes:
+      # Online CA material is read-only during normal ceremony operations.
+      - step-ca-data:/online:ro
+      - offline-root-data:/offline
+      - ./step-ca/offline-root-backup:/backup
+    secrets:
+      - ca_password
+
   nginx-app-1-incomplete-chain:
     image: nginx:1.28-alpine
     container_name: internal-pki-nginx-app-1-incomplete-chain
@@ -165,6 +180,8 @@ volumes:
     name: internal-pki-lab-step-client-app2-data
   app2-acme-webroot:
     name: internal-pki-lab-app2-acme-webroot
+  offline-root-data:
+    name: internal-pki-lab-offline-root-data
 
 secrets:
   ca_password:
