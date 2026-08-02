@@ -16,6 +16,8 @@ provisioner = "lab-acme"
 renew_before = "4h"
 verify_url = "https://app1.lab.local"
 operation_timeout_seconds = 120
+warning_before_seconds = 14400
+critical_before_seconds = 3600
 
 [[certificate]]
 id = "app2"
@@ -30,3 +32,5 @@ provisioner = "lab-acme"
 renew_before = "4h"
 verify_url = "https://app2.lab.local"
 operation_timeout_seconds = 120
+warning_before_seconds = 14400
+critical_before_seconds = 3600

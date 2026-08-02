@@ -29,6 +29,7 @@ verify_url = "https://test.lab.local"
             self.assertEqual(config.targets[0].target_id, "test")
             self.assertEqual(config.targets[0].renew_before, "4h")
             self.assertEqual(config.targets[0].operation_timeout_seconds, 120)
+            self.assertEqual(config.targets[0].warning_before_seconds, 14400)
         finally:
             path.unlink()
 

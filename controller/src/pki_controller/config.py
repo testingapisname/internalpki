@@ -25,6 +25,8 @@ def load_config(path: Path) -> ControllerConfig:
             renew_before=item.get("renew_before", "4h"),
             verify_url=item["verify_url"],
             operation_timeout_seconds=int(item.get("operation_timeout_seconds", 120)),
+            warning_before_seconds=int(item.get("warning_before_seconds", 14400)),
+            critical_before_seconds=int(item.get("critical_before_seconds", 3600)),
         )
         for item in raw.get("certificate", [])
     )

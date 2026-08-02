@@ -14,6 +14,7 @@ services to the internet.
 - [ACME HTTP-01 challenge setup](docs/acme-http01-setup.md)
 - [Certificate controller architecture and operation](controller/README.md)
 - [Offline root extraction ceremony](docs/offline-root-ceremony.md)
+- [Operational runbook](docs/operational-runbook.md)
 
 ## Prerequisites
 
@@ -90,8 +91,8 @@ in detail.
 - [x] Phase 10: automate renewal and Nginx reload with the controller
 - [x] Security milestone: remove the root private key from the online CA
 - [ ] Phases 11-14: incident and failure exercises
-- [ ] Phases 15-16: certificate monitoring and structured output
-- [ ] Phase 17: operational runbook
+- [x] Phases 15-16: controller monitoring, structured output, and metrics
+- [x] Phase 17: operational runbook
 - [ ] Phase 18: final demonstration
 
 Detailed commands, explanations, observed results, and troubleshooting notes

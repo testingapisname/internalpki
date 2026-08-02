@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import json
 import subprocess
 from pathlib import Path
 
@@ -92,3 +93,18 @@ def verify(target: CertificateTarget, certificate: Path) -> None:
         ),
         "certificate verification",
     )
+
+
+def inspect(target: CertificateTarget, certificate: Path) -> dict:
+    output = require_success(
+        run_step(
+            target,
+            "certificate",
+            "inspect",
+            "--format",
+            "json",
+            str(certificate),
+        ),
+        "certificate inspection",
+    )
+    return json.loads(output)

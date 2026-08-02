@@ -18,6 +18,8 @@ class CertificateTarget:
     renew_before: str
     verify_url: str
     operation_timeout_seconds: int
+    warning_before_seconds: int
+    critical_before_seconds: int
 
 
 @dataclass(frozen=True)

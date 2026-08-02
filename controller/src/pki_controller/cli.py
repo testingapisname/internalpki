@@ -8,6 +8,7 @@ from pathlib import Path
 from .config import load_config
 from .events import emit
 from .health import HealthState, start_health_server
+from .monitoring import collect
 from .renewal import renew_target
 
 
@@ -49,11 +50,36 @@ def main() -> int:
                     failures += 1
                     results[target.target_id] = "error"
                     emit("renewal_failed", target=target.target_id, error=str(error))
+            reports = []
+            for target in targets:
+                try:
+                    reports.append(collect(target))
+                except Exception as error:
+                    failures += 1
+                    reports.append(
+                        {
+                            "id": target.target_id,
+                            "hostname": target.hostname,
+                            "status": "ERROR",
+                            "error": str(error),
+                            "seconds_remaining": 0,
+                            "connectivity": False,
+                            "chain_valid": False,
+                            "hostname_valid": False,
+                            "deployed": False,
+                        }
+                    )
+                    emit("monitoring_failed", target=target.target_id, error=str(error))
+            checked_at = dt.datetime.now(dt.timezone.utc)
+            unhealthy = any(report["status"] != "OK" for report in reports)
             state.update(
                 {
-                    "status": "ok" if failures == 0 else "degraded",
-                    "checked_at": dt.datetime.now(dt.timezone.utc).isoformat(),
-                    "targets": results,
+                    "status": "degraded" if failures or unhealthy else "ok",
+                    "checked_at": checked_at.isoformat(),
+                    "targets": {report["id"]: report["status"] for report in reports},
+                    "renewal_results": results,
+                    "certificates": reports,
+                    "last_cycle_timestamp": checked_at.timestamp(),
                 }
             )
             emit("cycle_finished", failures=failures, results=results)
