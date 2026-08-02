@@ -261,9 +261,42 @@ Those behaviors are tested during the real ACME order.
 - The CA and App1 communicate on the isolated Compose network.
 - Host ports remain bound to `127.0.0.1`, preventing LAN exposure.
 
+## Issuance result
+
+The real ACME order completed successfully. The observed sequence was:
+
+```text
+Directory discovery
+-> nonce retrieval
+-> account creation
+-> pending order for app1.lab.local
+-> HTTP-01 authorization
+-> Nginx returned the challenge response with HTTP 200
+-> order became ready
+-> CSR finalization
+-> order became valid
+-> certificate download
+```
+
+The CA issued `app1-acme.crt` with the configured eight-hour default lifetime.
+It contains the leaf and intermediate certificates, chains to the lab root,
+records the `lab-acme` ACME provisioner, and uses the public key from App1's
+existing CSR.
+
+After `nginx -t` succeeded, Nginx was reloaded without rebuilding its container.
+The certificate fingerprint retrieved from the live TLS endpoint matched the
+new file:
+
+```text
+8d224403bf12577f7c32fb9814b78e9563a77b7738b08fede3b1c2748ca22031
+```
+
+This proves Nginx actively deployed the ACME-issued identity while remaining
+available. The manually issued certificate remains as superseded evidence and
+a comparison artifact.
+
 ## Next step
 
-The next operation uses the `lab-acme` provisioner to create an account and
-order for `app1.lab.local`. The ACME client will write a real challenge token,
-the CA will retrieve it through Nginx, and the existing CSR will be finalized
-into a separately named ACME-issued certificate.
+The next phase creates `app2.lab.local` with an independent key, CSR, ACME
+order, certificate, HTTP-01 webroot, and Nginx service. This demonstrates that
+the design is repeatable rather than a one-off App1 configuration.

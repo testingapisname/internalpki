@@ -82,9 +82,9 @@ in detail.
 - [x] Phase 4: manually generate App1's key, CSR, and leaf certificate
 - [x] Phase 5: serve App1 over HTTPS and reproduce common TLS failures
 - [x] Phase 6: record the certificate inventory
-- [ ] Phase 7: enable and inspect the ACME provisioner
-- [ ] Phase 8: obtain App1's certificate through ACME
-- [ ] Phase 9: add an independently managed App2 service
+- [x] Phase 7: enable and inspect the ACME provisioner
+- [x] Phase 8: obtain and deploy App1's certificate through ACME
+- [x] Phase 9: add an independently managed App2 service
 - [ ] Phase 10: automate renewal and Nginx reload
 - [ ] Phases 11-14: incident and failure exercises
 - [ ] Phases 15-16: certificate monitoring and structured output
@@ -92,5 +92,5 @@ in detail.
 - [ ] Phase 18: final demonstration
 
 Detailed commands, explanations, observed results, and troubleshooting notes
-through Phase 6 are recorded in the
-[initial setup and manual PKI walkthrough](docs/initial-setup.md).
+are recorded in the [initial setup walkthrough](docs/initial-setup.md) and the
+[ACME HTTP-01 guide](docs/acme-http01-setup.md).

@@ -53,6 +53,36 @@ services:
     networks:
       - pki-network
 
+  nginx-app-2:
+    image: nginx:1.28-alpine
+    container_name: internal-pki-nginx-app-2
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8082:80"
+      - "127.0.0.1:8445:443"
+    volumes:
+      - ./nginx/app2/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/app2/certs:/etc/nginx/tls:ro
+      - app2-acme-webroot:/var/www/acme:ro
+    networks:
+      pki-network:
+        aliases:
+          - app2.lab.local
+
+  step-cli-app-2:
+    image: smallstep/step-ca:0.30.2
+    profiles:
+      - tools
+    entrypoint:
+      - step
+    volumes:
+      - step-client-app2-data:/home/step
+      - ./step-ca/root_ca.crt:/roots/root_ca.crt:ro
+      - ./nginx/app2/certs:/work
+      - app2-acme-webroot:/var/www/acme
+    networks:
+      - pki-network
+
   nginx-app-1-incomplete-chain:
     image: nginx:1.28-alpine
     container_name: internal-pki-nginx-app-1-incomplete-chain
@@ -98,6 +128,10 @@ volumes:
     name: internal-pki-lab-step-client-data
   app1-acme-webroot:
     name: internal-pki-lab-app1-acme-webroot
+  step-client-app2-data:
+    name: internal-pki-lab-step-client-app2-data
+  app2-acme-webroot:
+    name: internal-pki-lab-app2-acme-webroot
 
 secrets:
   ca_password:
