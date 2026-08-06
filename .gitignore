@@ -6,6 +6,8 @@ code-signing/publisher/*
 !code-signing/publisher/.gitkeep
 code-signing/artifacts/*
 !code-signing/artifacts/.gitkeep
+code-signing/timestamp-authority/*
+!code-signing/timestamp-authority/.gitkeep
 
 # Issued server identities and ACME account keys.
 nginx/*/certs/
@@ -28,6 +30,7 @@ evidence/
 .DS_Store
 Thumbs.db
 .vscode/
+debug.log
 
 # Python cache and local virtual environments.
 __pycache__/

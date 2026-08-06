@@ -1,5 +1,37 @@
 # Internal PKI Lab
 
+## Quick demonstrations
+
+Before running demos, initialize missing local secrets and start the core lab:
+
+```text
+python setup/create_secrets.py
+docker compose up -d
+```
+
+Run the complete Nginx TLS and monitoring demonstration with:
+
+```text
+docker compose --profile tools build tls-demo
+docker compose --profile tools run --rm tls-demo
+```
+
+The demo intentionally shows an untrusted-root failure and a hostname-mismatch
+failure before validating both managed HTTPS services and the certificate
+controller.
+
+## Rebuildable setup
+
+Cross-platform setup utilities live under `setup/`. Create all missing local
+secret files with:
+
+```text
+python setup/create_secrets.py
+```
+
+The command skips existing secrets and never overwrites them. See
+`setup/README.md` for setup phases and credential-rotation cautions.
+
 A local, containerized learning lab for exploring the complete TLS certificate
 lifecycle. The lab progresses from building a CA hierarchy and issuing a
 certificate manually to ACME automation, renewal, incident exercises, and

@@ -167,11 +167,46 @@ services:
     volumes:
       - ./step-ca/root_ca.crt:/roots/root_ca.crt:ro
       - ./code-signing/publisher:/work
+      - ./code-signing/templates:/templates:ro
     secrets:
       - code_signing_ca_password
       - publisher_key_password
     networks:
       - pki-network
+
+  timestamp-cli:
+    image: smallstep/step-ca:0.30.2
+    profiles:
+      - tools
+    entrypoint:
+      - step
+    volumes:
+      - ./step-ca/root_ca.crt:/roots/root_ca.crt:ro
+      - ./code-signing/timestamp-authority:/work
+      - ./code-signing/templates:/templates:ro
+    secrets:
+      - timestamp_provisioner_password
+      - timestamp_key_password
+    networks:
+      - pki-network
+
+  timestamp-authority:
+    build:
+      context: ./code-signing/timestamp-service
+    image: internal-pki-timestamp-authority:0.1.0
+    container_name: internal-pki-timestamp-authority
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:9010:8080"
+    volumes:
+      - ./code-signing/timestamp-authority:/pki:ro
+      - timestamp-authority-state:/state
+    secrets:
+      - timestamp_key_password
+    networks:
+      pki-network:
+        aliases:
+          - timestamp.lab.local
 
   artifact-signer:
     build:
@@ -187,6 +222,28 @@ services:
       - ./step-ca/root_ca.crt:/trust/root_ca.crt:ro
     secrets:
       - publisher_key_password
+    networks:
+      - pki-network
+
+  tls-demo:
+    build:
+      context: ./demos/tls
+    image: internal-pki-tls-demo:0.1.0
+    profiles:
+      - tools
+    depends_on:
+      step-ca:
+        condition: service_healthy
+      nginx-app-1:
+        condition: service_started
+      nginx-app-2:
+        condition: service_started
+      certificate-controller:
+        condition: service_started
+    volumes:
+      - ./step-ca/root_ca.crt:/trust/root_ca.crt:ro
+    networks:
+      - pki-network
 
   nginx-app-1-incomplete-chain:
     image: nginx:1.28-alpine
@@ -241,6 +298,8 @@ volumes:
     name: internal-pki-lab-offline-root-data
   code-signing-ca-data:
     name: internal-pki-lab-code-signing-ca-data
+  timestamp-authority-state:
+    name: internal-pki-lab-timestamp-authority-state
 
 secrets:
   ca_password:
@@ -250,3 +309,7 @@ secrets:
     file: ./step-ca/secrets/code-signing-ca-password.txt
   publisher_key_password:
     file: ./step-ca/secrets/publisher-key-password.txt
+  timestamp_provisioner_password:
+    file: ./step-ca/secrets/timestamp-provisioner-password.txt
+  timestamp_key_password:
+    file: ./step-ca/secrets/timestamp-key-password.txt
